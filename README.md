@@ -38,7 +38,7 @@ git clone [https://github.com/EmmanoelMonteiro/crm_api_clientes.git](https://git
 cd crm_api_clientes
 ```
 
-## Estrutura do Projeto
+## 🗂️ Estrutura do Projeto
 A estrutura principal do projeto segue o padrão de aplicações Spring Boot:
 
 ```bash
@@ -92,3 +92,9 @@ java -jar target/crm-api-0.0.1-SNAPSHOT.jar
 ```
 
 A aplicação será iniciada na porta padrão do Spring Boot, que é `8080`.
+
+## 🌐 Documentação da API (Swagger UI)
+A documentação interativa da API está disponível através do Swagger UI. Após iniciar a aplicação, acesse:
+```bash
+http://localhost:8080/swagger-ui.html
+```
