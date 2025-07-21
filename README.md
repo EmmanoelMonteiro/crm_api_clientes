@@ -34,7 +34,7 @@ Siga estas instruções para configurar e executar o projeto em sua máquina loc
 ### Clonando o Repositório
 
 ```bash
-git clone [https://github.com/EmmanoelMonteiro/crm_api_clientes.git](https://github.com/EmmanoelMonteiro/crm_api_clientes.git)
+git clone https://github.com/EmmanoelMonteiro/crm_api_clientes.git
 cd crm_api_clientes
 ```
 
