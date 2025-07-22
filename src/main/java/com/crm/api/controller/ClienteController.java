@@ -3,6 +3,7 @@ package com.crm.api.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.crm.api.model.Cliente;
 import com.crm.api.service.ClienteService;
+import com.crm.api.exception.EntityNotFoundException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,8 +25,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/v1/cliente")
 public class ClienteController {
-	
-	
+
 	private ClienteService clienteService;
 	
 	public ClienteController(ClienteService clienteService) {
@@ -39,14 +40,20 @@ public class ClienteController {
 	
 	
 	@PutMapping
-	public Cliente update(@RequestBody @Valid Cliente cliente) {
-		return clienteService.update(cliente);
+	public ResponseEntity<?> update(@RequestBody @Valid Cliente cliente) {
+		try {
+			Cliente updatedCliente = clienteService.update(cliente);
+			return ResponseEntity.ok(updatedCliente);
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
 	}
 	
 	@Operation(description = "Operaço para salva as informações do cliente, incluindo o endereço.")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "201", description = "Cliente salvo com sucesso")
 	})
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente saveCliente(@RequestBody @Valid Cliente cliente) {

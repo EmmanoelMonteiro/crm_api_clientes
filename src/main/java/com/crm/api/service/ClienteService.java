@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.crm.api.exception.EntityNotFoundException;
 import com.crm.api.model.Cliente;
 import com.crm.api.repository.ClienteRepository;
 
@@ -28,6 +29,10 @@ public class ClienteService {
 		if (cliente != null) {
 			
 			updateCliente = clienteRepository.findById(cliente.getId());
+
+			if (updateCliente == null) {
+				throw new EntityNotFoundException("Cliente com ID " + cliente.getId() + " não encontrado para atualização");
+			}
 	
 			if (updateCliente.getNome() != cliente.getNome()) {	updateCliente.setNome(cliente.getNome().toString()); }
 			if (updateCliente.getCpf() != cliente.getCpf()) { updateCliente.setCpf(cliente.getCpf().toString()); }
