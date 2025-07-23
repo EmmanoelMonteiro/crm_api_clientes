@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento Completo de Clientes API</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciamento de Clientes</h1>
+
+        <div id="messages"></div>
+
+        <h2>Adicionar/Editar Cliente</h2>
+        <div class="form-group">
+            <label for="clienteId">ID (automático ao criar, preenchido ao editar):</label>
+            <input type="text" id="clienteId" readonly placeholder="Gerado automaticamente ou preenchido ao editar">
+        </div>
+        <div class="form-group">
+            <label for="clienteNome">Nome:</label>
+            <input type="text" id="clienteNome" placeholder="Nome do Cliente" required>
+        </div>
+        <div class="form-group">
+            <label for="clienteCpf">CPF:</label>
+            <input type="text" id="clienteCpf" placeholder="CPF do Cliente" required>
+        </div>
+        <div class="form-group">
+            <label for="clienteIdade">Idade:</label>
+            <input type="number" id="clienteIdade" placeholder="Idade do Cliente" required>
+        </div>
+        <div class="form-group">
+            <label for="clienteEmail">Email:</label>
+            <input type="email" id="clienteEmail" placeholder="email@example.com" required>
+        </div>
+        <div class="form-group">
+            <label for="clienteLogradouro">Logradouro:</label>
+            <input type="text" id="clienteLogradouro" placeholder="Endereço (Rua, Av.)">
+        </div>
+        <div class="form-group">
+            <label for="clienteNumero">Número:</label>
+            <input type="number" id="clienteNumero" placeholder="Número">
+        </div>
+        <div class="form-group">
+            <label for="clienteBairro">Bairro:</label>
+            <input type="text" id="clienteBairro" placeholder="Bairro">
+        </div>
+        <div class="form-group">
+            <label for="clienteCidade">Cidade:</label>
+            <input type="text" id="clienteCidade" placeholder="Cidade">
+        </div>
+        <div class="form-group">
+            <label for="clienteUf">UF:</label>
+            <input type="text" id="clienteUf" maxlength="2" placeholder="UF (ex: RN)">
+        </div>
+
+        <button onclick="salvarCliente()">Salvar Cliente</button>
+        <button onclick="limparFormulario()">Limpar Formulário</button>
+
+        <hr> <h2>Lista de Clientes</h2>
+        <div class="table-responsive">
+            <table class="client-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>UF</th>
+                        <th>Email</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="clientTableBody">
+                    </tbody>
+            </table>
+        </div>
+        <div id="noClientsMessage" style="display: none; text-align: center; padding: 20px; color: #555;">
+            Nenhum cliente cadastrado ainda.
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

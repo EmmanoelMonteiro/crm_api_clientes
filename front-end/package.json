@@ -1,0 +1,21 @@
+{
+  "name": "gerenciador-clientes-frontend",
+  "version": "1.0.0",
+  "description": "Exemplo de front-end para API de clientes",
+  "main": "public/js/script.js",
+  "scripts": {
+    "start": "npx serve public"
+  },
+  "keywords": [
+    "frontend",
+    "javascript",
+    "html",
+    "css",
+    "api"
+  ],
+  "author": "Seu Nome",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}

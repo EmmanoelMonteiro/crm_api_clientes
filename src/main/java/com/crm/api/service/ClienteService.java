@@ -25,7 +25,10 @@ public class ClienteService {
 	public Cliente update(Cliente cliente) {
 		
 		Cliente updateCliente = new Cliente();
-		
+
+		System.out.println("Service Atualizando Dados ...........");
+		System.out.println(cliente.getNome());
+
 		if (cliente != null) {
 			
 			updateCliente = clienteRepository.findById(cliente.getId());
@@ -37,6 +40,7 @@ public class ClienteService {
 			if (updateCliente.getNome() != cliente.getNome()) {	updateCliente.setNome(cliente.getNome().toString()); }
 			if (updateCliente.getCpf() != cliente.getCpf()) { updateCliente.setCpf(cliente.getCpf().toString()); }
 			if (updateCliente.getIdade() != cliente.getIdade()) { updateCliente.setIdade(cliente.getIdade()); }
+			if (updateCliente.getEmail() != cliente.getEmail()) { updateCliente.setEmail(cliente.getEmail()); }
 			if (updateCliente.getLogradouro() != cliente.getLogradouro()) {	updateCliente.setLogradouro(cliente.getLogradouro().toString()); }
 			if (updateCliente.getNumero() != cliente.getNumero()) { updateCliente.setNumero(cliente.getNumero()); }
 			if (updateCliente.getBairro() != cliente.getBairro()) { updateCliente.setBairro(cliente.getBairro()); }

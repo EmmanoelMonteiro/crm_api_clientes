@@ -2,20 +2,17 @@ package com.crm.api.model;
 
 import java.sql.Timestamp;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Cliente {
 	
 	@Id
@@ -33,6 +30,9 @@ public class Cliente {
 	
 	@Column(nullable = false)
 	private Long idade;
+
+	@Column(nullable = false)
+	private String email;
 	
 	@Column(nullable = false)
 	private String logradouro;
