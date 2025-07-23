@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import com.crm.api.exception.EntityNotFoundException;
 import com.crm.api.model.Cliente;
 import com.crm.api.repository.ClienteRepository;
 
@@ -24,14 +25,22 @@ public class ClienteService {
 	public Cliente update(Cliente cliente) {
 		
 		Cliente updateCliente = new Cliente();
-		
+
+		System.out.println("Service Atualizando Dados ...........");
+		System.out.println(cliente.getNome());
+
 		if (cliente != null) {
 			
 			updateCliente = clienteRepository.findById(cliente.getId());
+
+			if (updateCliente == null) {
+				throw new EntityNotFoundException("Cliente com ID " + cliente.getId() + " não encontrado para atualização");
+			}
 	
 			if (updateCliente.getNome() != cliente.getNome()) {	updateCliente.setNome(cliente.getNome().toString()); }
 			if (updateCliente.getCpf() != cliente.getCpf()) { updateCliente.setCpf(cliente.getCpf().toString()); }
 			if (updateCliente.getIdade() != cliente.getIdade()) { updateCliente.setIdade(cliente.getIdade()); }
+			if (updateCliente.getEmail() != cliente.getEmail()) { updateCliente.setEmail(cliente.getEmail()); }
 			if (updateCliente.getLogradouro() != cliente.getLogradouro()) {	updateCliente.setLogradouro(cliente.getLogradouro().toString()); }
 			if (updateCliente.getNumero() != cliente.getNumero()) { updateCliente.setNumero(cliente.getNumero()); }
 			if (updateCliente.getBairro() != cliente.getBairro()) { updateCliente.setBairro(cliente.getBairro()); }

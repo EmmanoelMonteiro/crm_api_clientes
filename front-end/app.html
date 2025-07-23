@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento Completo de Clientes API</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background-color: #f4f7f6; color: #333; }
+        .container { max-width: 900px; margin: auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+        h1, h2 { color: #0056b3; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-top: 25px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="email"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+            margin-right: 10px;
+        }
+        button:hover { background-color: #0056b3; }
+        button.delete { background-color: #dc3545; }
+        button.delete:hover { background-color: #c82333; }
+        button.edit { background-color: #ffc107; color: #333;}
+        button.edit:hover { background-color: #e0a800; }
+        .client-list { margin-top: 20px; }
+        .client-item {
+            background-color: #e9ecef;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .client-item div { flex-grow: 1; }
+        .client-item .actions button { margin-left: 10px; }
+        #messages {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: none; /* Escondido por padrão */
+        }
+        #messages.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        #messages.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciamento de Clientes</h1>
+
+        <div id="messages"></div>
+
+        <h2>Adicionar/Editar Cliente</h2>
+        <div class="form-group">
+            <label for="clienteId">ID (automático ao criar, preenchido ao editar):</label>
+            <input type="text" id="clienteId" readonly placeholder="Gerado automaticamente ou preenchido ao editar">
+        </div>
+        <div class="form-group">
+            <label for="clienteNome">Nome:</label>
+            <input type="text" id="clienteNome" placeholder="Nome do Cliente" required>
+        </div>
+        <div class="form-group">
+            <label for="clienteEmail">Email:</label>
+            <input type="email" id="clienteEmail" placeholder="email@example.com" required>
+        </div>
+        <button onclick="salvarCliente()">Salvar Cliente</button>
+        <button onclick="limparFormulario()">Limpar Formulário</button>
+
+        ---
+
+        <h2>Lista de Clientes</h2>
+        <div class="client-list" id="clientList">
+            </div>
+    </div>
+
+    <script>
+        // URL base da sua API
+        const BASE_URL = 'http://localhost:8080/v1/cliente';
+
+        // Elementos DOM
+        const clienteIdInput = document.getElementById('clienteId');
+        const clienteNomeInput = document.getElementById('clienteNome');
+        const clienteEmailInput = document.getElementById('clienteEmail');
+        const clientListDiv = document.getElementById('clientList');
+        const messagesDiv = document.getElementById('messages');
+
+        // Função para exibir mensagens (sucesso/erro)
+        function showMessage(message, type) {
+            messagesDiv.textContent = message;
+            messagesDiv.className = `messages ${type}`;
+            messagesDiv.style.display = 'block';
+            setTimeout(() => {
+                messagesDiv.style.display = 'none';
+            }, 3000); // Esconde a mensagem após 3 segundos
+        }
+
+        // --- Método GET: Buscar e Exibir Todos os Clientes ---
+        async function fetchClients() {
+            try {
+                const response = await fetch(BASE_URL);
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP! Status: ${response.status}`);
+                }
+                const clients = await response.json();
+                renderClients(clients);
+            } catch (error) {
+                showMessage(`Erro ao carregar clientes: ${error.message}`, 'error');
+            }
+        }
+
+        // Renderiza os clientes na lista
+        function renderClients(clients) {
+            clientListDiv.innerHTML = ''; // Limpa a lista existente
+            if (clients.length === 0) {
+                clientListDiv.innerHTML = '<p>Nenhum cliente cadastrado.</p>';
+                return;
+            }
+            clients.forEach(client => {
+                const clientItem = document.createElement('div');
+                clientItem.className = 'client-item';
+                clientItem.innerHTML = `
+                    <div>
+                        <strong>ID:</strong> ${client.id}<br>
+                        <strong>Nome:</strong> ${client.nome}<br>
+                        <strong>Email:</strong> ${client.email}
+                    </div>
+                    <div class="actions">
+                        <button class="edit" onclick="editarClientePreencherForm('${client.id}', '${client.nome}', '${client.email}')">Editar</button>
+                        <button class="delete" onclick="excluirCliente('${client.id}')">Excluir</button>
+                    </div>
+                `;
+                clientListDiv.appendChild(clientItem);
+            });
+        }
+
+        // --- Método POST/PUT: Salvar (Criar ou Atualizar) Cliente ---
+        async function salvarCliente() {
+            const id = clienteIdInput.value;
+            const nome = clienteNomeInput.value;
+            const email = clienteEmailInput.value;
+
+            if (!nome || !email) {
+                showMessage('Nome e Email são campos obrigatórios.', 'error');
+                return;
+            }
+
+            const clientData = { nome, email };
+            let url = BASE_URL;
+            let method = 'POST';
+
+            if (id) { // Se o ID existe, é uma edição (PUT)
+                url = `${BASE_URL}/${id}`;
+                method = 'PUT';
+                clientData.id = id; // O backend pode esperar o ID no corpo para PUT
+            }
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(clientData)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Erro HTTP! Status: ${response.status} - ${errorText}`);
+                }
+
+                const result = await response.json();
+                showMessage(`Cliente ${id ? 'atualizado' : 'criado'} com sucesso!`, 'success');
+                limparFormulario();
+                fetchClients(); // Recarrega a lista
+            } catch (error) {
+                showMessage(`Erro ao salvar cliente: ${error.message}`, 'error');
+            }
+        }
+
+        // Preenche o formulário para edição
+        function editarClientePreencherForm(id, nome, email) {
+            clienteIdInput.value = id;
+            clienteNomeInput.value = nome;
+            clienteEmailInput.value = email;
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola para o topo para o formulário
+        }
+
+        // Limpa o formulário
+        function limparFormulario() {
+            clienteIdInput.value = '';
+            clienteNomeInput.value = '';
+            clienteEmailInput.value = '';
+        }
+
+        // --- Método DELETE: Excluir Cliente ---
+        async function excluirCliente(id) {
+            if (!confirm(`Tem certeza que deseja excluir o cliente com ID ${id}?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BASE_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.status === 204) { // No Content para DELETE bem-sucedido
+                    showMessage(`Cliente ${id} excluído com sucesso!`, 'success');
+                } else if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Erro HTTP! Status: ${response.status} - ${errorText}`);
+                } else { // Backend retornou 200 OK com algum conteúdo
+                    const result = await response.json();
+                    showMessage(`Cliente ${id} excluído com sucesso!`, 'success');
+                }
+                fetchClients(); // Recarrega a lista
+            } catch (error) {
+                showMessage(`Erro ao excluir cliente ${id}: ${error.message}`, 'error');
+            }
+        }
+
+        // Carrega os clientes ao carregar a página
+        document.addEventListener('DOMContentLoaded', fetchClients);
+    </script>
+</body>
+</html>

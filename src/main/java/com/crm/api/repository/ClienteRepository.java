@@ -7,6 +7,5 @@ import com.crm.api.model.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-
 	Cliente findById(long id);
 }
