@@ -37,15 +37,17 @@ public class ClienteController {
 	public List<Cliente> list() {
 		return clienteService.list();
 	}
-	
-	
+
+	@Operation(description = "Encontrar cliente.")
+	@GetMapping("{id}")
+	public Cliente findClient(@PathVariable Integer id){
+		return clienteService.findClient(id);
+	}
+
 	@PutMapping
 	public ResponseEntity<?> update(@RequestBody @Valid Cliente cliente) {
-<<<<<<< HEAD
 		System.out.println("Controller Atualizando Dados ...........");
 		System.out.println(cliente);
-=======
->>>>>>> 456ee5ffbd1655398a898f03710a52f3ed98cf32
 		try {
 			Cliente updatedCliente = clienteService.update(cliente);
 			return ResponseEntity.ok(updatedCliente);

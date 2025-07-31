@@ -21,6 +21,10 @@ public class ClienteService {
 	public List<Cliente> list() {
 		return clienteRepository.findAll();
 	}
+
+	public Cliente findClient(Integer id){
+		return clienteRepository.findById(id);
+	}
 	
 	public Cliente update(Cliente cliente) {
 		
@@ -30,27 +34,55 @@ public class ClienteService {
 		System.out.println(cliente.getNome());
 
 		if (cliente != null) {
-			
-			updateCliente = clienteRepository.findById(cliente.getId());
 
-			if (updateCliente == null) {
-				throw new EntityNotFoundException("Cliente com ID " + cliente.getId() + " não encontrado para atualização");
+			try {
+
+				updateCliente = clienteRepository.findById(cliente.getId());
+
+				if (updateCliente == null) {
+					throw new EntityNotFoundException("Cliente com ID " + cliente.getId() + " não encontrado para atualização");
+				}
+
+				System.out.println("Cliente encontrado ...........");
+				System.out.println(updateCliente.getNome());
+
+				if (updateCliente.getNome() != cliente.getNome()) {
+					updateCliente.setNome(cliente.getNome().toString());
+				}
+				if (updateCliente.getCpf() != cliente.getCpf()) {
+					updateCliente.setCpf(cliente.getCpf().toString());
+				}
+				if (updateCliente.getIdade() != cliente.getIdade()) {
+					updateCliente.setIdade(cliente.getIdade());
+				}
+				if (updateCliente.getEmail() != cliente.getEmail()) {
+					updateCliente.setEmail(cliente.getEmail());
+				}
+				if (updateCliente.getLogradouro() != cliente.getLogradouro()) {
+					updateCliente.setLogradouro(cliente.getLogradouro().toString());
+				}
+				if (updateCliente.getNumero() != cliente.getNumero()) {
+					updateCliente.setNumero(cliente.getNumero());
+				}
+				if (updateCliente.getBairro() != cliente.getBairro()) {
+					updateCliente.setBairro(cliente.getBairro());
+				}
+				if (updateCliente.getCidade() != cliente.getCidade()) {
+					updateCliente.setCidade(cliente.getCidade());
+				}
+				if (updateCliente.getUf() != cliente.getUf()) {
+					updateCliente.setUf(cliente.getUf());
+				}
+
+				clienteRepository.save(updateCliente);
+
+				System.out.println("Cliente Atualizando com sucesso!!! ...........");
+
+			} catch (RuntimeException e) {
+				System.out.println(e.getMessage());
 			}
-	
-			if (updateCliente.getNome() != cliente.getNome()) {	updateCliente.setNome(cliente.getNome().toString()); }
-			if (updateCliente.getCpf() != cliente.getCpf()) { updateCliente.setCpf(cliente.getCpf().toString()); }
-			if (updateCliente.getIdade() != cliente.getIdade()) { updateCliente.setIdade(cliente.getIdade()); }
-			if (updateCliente.getEmail() != cliente.getEmail()) { updateCliente.setEmail(cliente.getEmail()); }
-			if (updateCliente.getLogradouro() != cliente.getLogradouro()) {	updateCliente.setLogradouro(cliente.getLogradouro().toString()); }
-			if (updateCliente.getNumero() != cliente.getNumero()) { updateCliente.setNumero(cliente.getNumero()); }
-			if (updateCliente.getBairro() != cliente.getBairro()) { updateCliente.setBairro(cliente.getBairro()); }
-			if (updateCliente.getCidade() != cliente.getCidade()) { updateCliente.setCidade(cliente.getCidade()); }
-			if (updateCliente.getUf() != cliente.getUf()) { updateCliente.setUf(cliente.getUf()); }
-			
-			clienteRepository.save(updateCliente);
-
 		}
-		
+
 		return updateCliente;
 	}
 	

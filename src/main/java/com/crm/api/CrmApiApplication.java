@@ -22,7 +22,7 @@ public class CrmApiApplication {
 		@Override
 		public void addCorsMappings(CorsRegistry registry) {
 			registry.addMapping("/**") // Aplica CORS a todas as rotas
-					.allowedOrigins("http://localhost:3000") // Ou "*" para desenvolvimento
+					.allowedOrigins("http://localhost:3000,http://localhost:4200,http://localhost:8080") // Ou "*" para desenvolvimento
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 					.allowedHeaders("*")
 					.allowCredentials(true)
